@@ -12,7 +12,7 @@ namespace ZacksFiasco.Web.Navigation
             bool isVisible = true;
             bool rc = false;
 
-            if (node != null && node["Visible"] != null && bool.TryParse(node["Visible"], out isVisible))
+            if (node != null && node["visible"] != null && bool.TryParse(node["visible"], out isVisible))
             {
                 if (isVisible)
                 {
@@ -29,6 +29,6 @@ namespace ZacksFiasco.Web.Navigation
             }
 
             return rc;
-        }
+        }        
     }
 }

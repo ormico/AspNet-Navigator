@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" >
+    <siteMapNode url="~/Default.aspx" title="Home" navigatorId="One" >
+        <siteMapNode url="~/Default2.aspx" title="Two" navigatorId="Two" />
+        <siteMapNode url="~/Default3.aspx" title="Three" navigatorId="Three" />
+        <siteMapNode url="~/Hidden1.aspx"  navigatorId="HiddenOne" visible="false" />		
+    </siteMapNode>
+</siteMap>
