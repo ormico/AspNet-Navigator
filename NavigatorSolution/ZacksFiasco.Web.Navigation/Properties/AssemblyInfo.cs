@@ -26,4 +26,4 @@ using System.Web;
 [assembly: Guid("84306119-bd0d-4d7c-b338-1ad3b98aa6e7")]
 
 [assembly: CLSCompliant(true)]
-[assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.1.*")]
