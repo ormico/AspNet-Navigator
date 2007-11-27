@@ -2,7 +2,8 @@ using System;
 using System.Web;
 using System.Collections.Generic;
 using System.Text;
-
+using System.Configuration;
+using ZacksFiasco.Web.Navigation.Configuration;
 
 namespace ZacksFiasco.Web.Navigation
 {
@@ -13,23 +14,48 @@ namespace ZacksFiasco.Web.Navigation
             parameters = new Dictionary<string, string>(3);
         }
 
-        public Navigator(string PageKey)
+        public Navigator(string NavigatorId)
             : this()
         {
-            pageKey = PageKey;
+            navigatorId = NavigatorId;
         }
 
-        static string GetUrlFromKey(string resourceKey)
+        static string GetUrlFromKey(string navigatorId)
         {
             SiteMapNode rcNode = null;
             string rc = string.Empty;
 
-            foreach (SiteMapNode node in SiteMap.Providers["AspNetXmlSiteMapProvider"].RootNode.GetAllNodes())
+            NavigatorSection ns = ConfigurationManager.GetSection("ZacksFiasco.Web.Navigation") as NavigatorSection;
+
+            if (ns != null)
             {
-                if (node.IsAccessibleToUser(HttpContext.Current) && node.ResourceKey == resourceKey)
+                foreach (ProviderElement pe in ns.SiteMapProvidersToSearch)
                 {
-                    rcNode = node;
-                    break;
+                    //foreach (SiteMapNode node in SiteMap.Providers["AspNetXmlSiteMapProvider"].RootNode.GetAllNodes())
+                    foreach (SiteMapNode node in SiteMap.Providers[pe.SiteMapProviderName].RootNode.GetAllNodes())
+                    {
+                        if (node.IsAccessibleToUser(HttpContext.Current) && node["navigatorId"] == navigatorId)
+                        {
+                            rcNode = node;
+                            break;
+                        }
+                    }
+
+                    if (rcNode != null)
+                    {
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                foreach (SiteMapNode node in SiteMap.Providers["AspNetXmlSiteMapProvider"].RootNode.GetAllNodes())
+                {
+                    if (node.IsAccessibleToUser(HttpContext.Current) && node["navigatorId"] == navigatorId)
+                    {
+                        rcNode = node;
+                        break;
+                    }
                 }
             }
 
@@ -41,12 +67,12 @@ namespace ZacksFiasco.Web.Navigation
             return rc;
         }
 
-        string pageKey;
+        string navigatorId;
 
-        public string PageKey
+        public string NavigatorId
         {
-            get { return pageKey; }
-            set { pageKey = value; }
+            get { return navigatorId; }
+            set { navigatorId = value; }
         }
 
         Dictionary<string, string> parameters;
@@ -59,7 +85,7 @@ namespace ZacksFiasco.Web.Navigation
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(Navigator.GetUrlFromKey(pageKey));
+            sb.Append(Navigator.GetUrlFromKey(navigatorId));
             HttpServerUtility s = HttpContext.Current.Server;
 
             if (parameters.Count > 0)
